@@ -1,4 +1,3 @@
-import axios, { ResponseType } from "axios";
 import { getKey } from "./key";
 
 const API_ENDPOINT = "http://localhost:8000"
@@ -12,6 +11,7 @@ export async function recognizeSign(vidB64: string, model: string = "LATEST"): P
     }));
     return res["prediction"][0]["prediction"] as string;
 }
+
 export async function recognizeSpeech(audioB64: string, model: string = "LATEST"): Promise<string> {
     let res = (await runRequest("/recognize-speech", {
         payload: audioB64,
@@ -21,6 +21,7 @@ export async function recognizeSpeech(audioB64: string, model: string = "LATEST"
     }));
     return res["prediction"][0]["prediction"] as string;
 }
+
 export async function produceSign(eng: string, model: string = "MALE"): Promise<Blob> {
     let res = (await runRequest("/produce-sign", {
         english: eng,
@@ -29,6 +30,7 @@ export async function produceSign(eng: string, model: string = "MALE"): Promise<
     }, 'blob'));
     return res;
 }
+
 export async function produceSpeech(eng: string, model: string = "MALE"): Promise<Blob> {
     let res = (await runRequest("/produce-speech", {
         english: eng,
@@ -37,31 +39,47 @@ export async function produceSpeech(eng: string, model: string = "MALE"): Promis
     }, 'blob'));
     return res;
 }
-async function runRequest(request: string, payload: any, responseType: ResponseType | undefined = "json"): Promise<any> {
-    let resp = (await axios.post(API_ENDPOINT + request, payload, {
-        headers: {
-            "X-api-key": getKey(),
-        },
-        responseType: responseType
-    }));
-    if (resp.status == 202) {
-        let req_id = responseType == undefined ? resp.data["batch_id"] : JSON.parse(await (resp?.data)?.text());
-        while (true) {
-            let resp = await axios.get(API_ENDPOINT + request + req_id, {
-                headers: {
-                    "X-api-key": getKey(),
-                },
-                responseType: responseType
-            }
-            );
-            if (resp.status == 202) {
-                // job is not done yet, let's poll again
-                continue
-            }
-            return resp.data;
-        }
+
+async function runRequest(request: string, payload: any, responseType: string | undefined = "json"): Promise<any> {
+    const requestHeaders: HeadersInit = new Headers();
+    requestHeaders.set('Content-Type', 'application/json');
+    requestHeaders.set('X-api-key', getKey()!);
+
+    const options: RequestInit = {
+        method: 'POST',
+        headers: requestHeaders,
+        body: JSON.stringify(payload),
+    };
+
+    let response = await fetch(API_ENDPOINT + request, options);
+    let data;
+
+    if (responseType === 'blob') {
+        data = await response.blob();
     } else {
-        return resp.data;
+        const jsonData = await response.json();
+        data = jsonData;
     }
 
+    if (response.status === 202) {
+        let req_id = data["batch_id"];
+        while (true) {
+            response = await fetch(API_ENDPOINT + request + "/" + req_id, {
+                headers: requestHeaders,
+            });
+
+            if (response.status === 202) {
+                // If job is not done yet, let's poll again.
+                continue;
+            } else {
+                if (responseType === 'blob') {
+                    return response.blob();
+                } else {
+                    return response.json();
+                }
+            }
+        }
+    } else {
+        return data;
+    }
 }

@@ -35,12 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.produceSpeech = exports.produceSign = exports.recognizeSpeech = exports.recognizeSign = void 0;
-var axios_1 = __importDefault(require("axios"));
 var key_1 = require("./key");
 var API_ENDPOINT = "http://localhost:8000";
 function recognizeSign(vidB64, model) {
@@ -122,51 +118,60 @@ function produceSpeech(eng, model) {
 }
 exports.produceSpeech = produceSpeech;
 function runRequest(request, payload, responseType) {
-    var _a;
     if (responseType === void 0) { responseType = "json"; }
     return __awaiter(this, void 0, void 0, function () {
-        var resp, req_id, _b, _c, _d, resp_1;
-        return __generator(this, function (_e) {
-            switch (_e.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post(API_ENDPOINT + request, payload, {
-                        headers: {
-                            "X-api-key": (0, key_1.getKey)(),
-                        },
-                        responseType: responseType
-                    })];
+        var requestHeaders, options, response, data, jsonData, req_id;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    requestHeaders = new Headers();
+                    requestHeaders.set('Content-Type', 'application/json');
+                    requestHeaders.set('X-api-key', (0, key_1.getKey)());
+                    options = {
+                        method: 'POST',
+                        headers: requestHeaders,
+                        body: JSON.stringify(payload),
+                    };
+                    return [4 /*yield*/, fetch(API_ENDPOINT + request, options)];
                 case 1:
-                    resp = (_e.sent());
-                    if (!(resp.status == 202)) return [3 /*break*/, 8];
-                    if (!(responseType == undefined)) return [3 /*break*/, 2];
-                    _b = resp.data["batch_id"];
-                    return [3 /*break*/, 4];
+                    response = _a.sent();
+                    if (!(responseType === 'blob')) return [3 /*break*/, 3];
+                    return [4 /*yield*/, response.blob()];
                 case 2:
-                    _d = (_c = JSON).parse;
-                    return [4 /*yield*/, ((_a = (resp === null || resp === void 0 ? void 0 : resp.data)) === null || _a === void 0 ? void 0 : _a.text())];
-                case 3:
-                    _b = _d.apply(_c, [_e.sent()]);
-                    _e.label = 4;
+                    data = _a.sent();
+                    return [3 /*break*/, 5];
+                case 3: return [4 /*yield*/, response.json()];
                 case 4:
-                    req_id = _b;
-                    _e.label = 5;
+                    jsonData = _a.sent();
+                    data = jsonData;
+                    _a.label = 5;
                 case 5:
-                    if (!true) return [3 /*break*/, 7];
-                    return [4 /*yield*/, axios_1.default.get(API_ENDPOINT + request + req_id, {
-                            headers: {
-                                "X-api-key": (0, key_1.getKey)(),
-                            },
-                            responseType: responseType
-                        })];
+                    if (!(response.status === 202)) return [3 /*break*/, 9];
+                    req_id = data["batch_id"];
+                    _a.label = 6;
                 case 6:
-                    resp_1 = _e.sent();
-                    if (resp_1.status == 202) {
-                        // job is not done yet, let's poll again
-                        return [3 /*break*/, 5];
+                    if (!true) return [3 /*break*/, 8];
+                    return [4 /*yield*/, fetch(API_ENDPOINT + request + "/" + req_id, {
+                            headers: requestHeaders,
+                        })];
+                case 7:
+                    response = _a.sent();
+                    if (response.status === 202) {
+                        // If job is not done yet, let's poll again.
+                        return [3 /*break*/, 6];
                     }
-                    return [2 /*return*/, resp_1.data];
-                case 7: return [3 /*break*/, 9];
-                case 8: return [2 /*return*/, resp.data];
-                case 9: return [2 /*return*/];
+                    else {
+                        if (responseType === 'blob') {
+                            return [2 /*return*/, response.blob()];
+                        }
+                        else {
+                            return [2 /*return*/, response.json()];
+                        }
+                    }
+                    return [3 /*break*/, 6];
+                case 8: return [3 /*break*/, 10];
+                case 9: return [2 /*return*/, data];
+                case 10: return [2 /*return*/];
             }
         });
     });
