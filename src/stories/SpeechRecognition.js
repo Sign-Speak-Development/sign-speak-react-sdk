@@ -94,7 +94,7 @@ var SpeechRecognition = function (_a) {
         };
     }, []);
     return ((0, jsx_runtime_1.jsxs)("div", __assign({ className: (0, tailwind_merge_1.twMerge)("flex flex-col ".concat(containerClassName)) }, { children: [transcription != null && transcription.trim().length > 0 ? (0, jsx_runtime_1.jsx)("p", __assign({ className: (0, tailwind_merge_1.twMerge)("mt-2 p-3 mx-auto ".concat(transcriptionClassName)) }, { children: transcription })) : null, processing ?
-                (0, jsx_runtime_1.jsx)(ClipLoader_1.default, { className: (0, tailwind_merge_1.twMerge)("mt-2 p-3 mx-auto ".concat(containerClassName)) }) :
+                (0, jsx_runtime_1.jsx)(ClipLoader_1.default, { color: '#00AA9D', className: (0, tailwind_merge_1.twMerge)("mt-2 p-3 mx-auto ".concat(containerClassName)) }) :
                 recording ? ((0, jsx_runtime_1.jsx)("button", __assign({ className: "mt-2 p-3 mx-auto bg-sign-speak-teal rounded-lg font-semibold text-white ".concat(containerClassName), onClick: stopRecording }, { children: "Stop Listening" }))) : ((0, jsx_runtime_1.jsx)("button", __assign({ className: "mt-2 p-3 mx-auto bg-sign-speak-teal rounded-lg font-semibold text-white ".concat(containerClassName), onClick: startRecording }, { children: "Start Listening" })))] })));
 };
 exports.SpeechRecognition = SpeechRecognition;

@@ -107,7 +107,7 @@ export const SignRecognition = ({
         interpretation != null && interpretation.trim().length > 0 ? <p className={twMerge(`mt-2 p-3 mx-auto ${interpretationClassName}`)}>{interpretation}</p> : null
       }
       {processing ?
-        <ClipLoader className={twMerge(`mt-2 p-3 mx-auto ${containerClassName}`)} /> :
+        <ClipLoader color={'#00AA9D'} className={twMerge(`mt-2 p-3 mx-auto ${containerClassName}`)} /> :
         recording ? (
           <button
             className={`mt-2 p-3 mx-auto bg-sign-speak-teal rounded-lg font-semibold text-white ${containerClassName}`}
