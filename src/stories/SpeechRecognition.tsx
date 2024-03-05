@@ -100,14 +100,14 @@ export const SpeechRecognition = ({
             className={`mt-2 p-3 mx-auto bg-sign-speak-teal rounded-lg font-semibold text-white ${containerClassName}`}
             onClick={stopRecording}
           >
-            Stop
+            Stop Listening
           </button>
         ) : (
           <button
             className={`mt-2 p-3 mx-auto bg-sign-speak-teal rounded-lg font-semibold text-white ${containerClassName}`}
             onClick={startRecording}
           >
-            Start
+            Start Listening
           </button>
         )
       }
