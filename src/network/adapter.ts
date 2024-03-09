@@ -1,6 +1,6 @@
 import { getKey } from "./key";
 
-const API_ENDPOINT = "http://localhost:8000"
+const API_ENDPOINT = "https://api.sign-speak.com"
 
 export async function recognizeSign(vidB64: string, model: string = "LATEST"): Promise<string> {
     let res = (await runRequest("/recognize-sign", {

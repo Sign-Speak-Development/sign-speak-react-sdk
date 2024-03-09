@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.produceSpeech = exports.produceSign = exports.recognizeSpeech = exports.recognizeSign = void 0;
 var key_1 = require("./key");
-var API_ENDPOINT = "http://localhost:8000";
+var API_ENDPOINT = "https://api.sign-speak.com";
 function recognizeSign(vidB64, model) {
     if (model === void 0) { model = "LATEST"; }
     return __awaiter(this, void 0, void 0, function () {
