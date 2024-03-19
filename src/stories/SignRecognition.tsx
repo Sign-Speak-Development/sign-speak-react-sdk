@@ -13,6 +13,7 @@ export interface SignRecognitionProps {
   buttonClassName?: string;
   interpretationClassName?: string;
   includeFeedback?: boolean;
+  feedbackClassName?: string;
 
   gotResult: (_: String) => void
 }
@@ -33,6 +34,7 @@ export const SignRecognition = ({
   buttonClassName = "",
   interpretationClassName = "",
   includeFeedback = true,
+  feedbackClassName = "",
 
   gotResult = (_) => { },
   ...props
@@ -161,7 +163,7 @@ export const SignRecognition = ({
         </button>
       : state == State.CORRECTING ?
         <input
-          className={`mt-2 p-3 rounded-sm border-sign-speak-teal border`}
+          className={twMerge(`mt-2 p-3 rounded-sm border-sign-speak-teal border ${feedbackClassName}`)}
           onSubmit = {submitCorrection}
           onKeyUp = {e => e.key == "Enter" ? submitCorrection() : null}
           onChange = {e => setCorrection(e.target.value)}

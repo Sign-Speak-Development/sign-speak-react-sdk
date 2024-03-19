@@ -41,14 +41,14 @@ var State;
     State[State["CORRECTING"] = 4] = "CORRECTING";
 })(State || (State = {}));
 var SignRecognition = function (_a) {
-    var _b = _a.modelName, modelName = _b === void 0 ? "LATEST" : _b, _c = _a.containerClassName, containerClassName = _c === void 0 ? "" : _c, _d = _a.cameraClassName, cameraClassName = _d === void 0 ? "" : _d, _e = _a.buttonClassName, buttonClassName = _e === void 0 ? "" : _e, _f = _a.interpretationClassName, interpretationClassName = _f === void 0 ? "" : _f, _g = _a.includeFeedback, includeFeedback = _g === void 0 ? true : _g, _h = _a.gotResult, gotResult = _h === void 0 ? function (_) { } : _h, props = __rest(_a, ["modelName", "containerClassName", "cameraClassName", "buttonClassName", "interpretationClassName", "includeFeedback", "gotResult"]);
+    var _b = _a.modelName, modelName = _b === void 0 ? "LATEST" : _b, _c = _a.containerClassName, containerClassName = _c === void 0 ? "" : _c, _d = _a.cameraClassName, cameraClassName = _d === void 0 ? "" : _d, _e = _a.buttonClassName, buttonClassName = _e === void 0 ? "" : _e, _f = _a.interpretationClassName, interpretationClassName = _f === void 0 ? "" : _f, _g = _a.includeFeedback, includeFeedback = _g === void 0 ? true : _g, _h = _a.feedbackClassName, feedbackClassName = _h === void 0 ? "" : _h, _j = _a.gotResult, gotResult = _j === void 0 ? function (_) { } : _j, props = __rest(_a, ["modelName", "containerClassName", "cameraClassName", "buttonClassName", "interpretationClassName", "includeFeedback", "feedbackClassName", "gotResult"]);
     var preview = (0, react_1.useRef)(null);
     var stream = (0, react_1.useRef)(null);
     var recorder = (0, react_1.useRef)(null);
-    var _j = (0, react_1.useState)(null), interpretation = _j[0], setInterpretation = _j[1];
-    var _k = (0, react_1.useState)(State.WAITING), state = _k[0], setState = _k[1];
-    var _l = (0, react_1.useState)(null), correction = _l[0], setCorrection = _l[1];
-    var _m = (0, react_1.useState)(null), feedbackID = _m[0], setFeedbackID = _m[1];
+    var _k = (0, react_1.useState)(null), interpretation = _k[0], setInterpretation = _k[1];
+    var _l = (0, react_1.useState)(State.WAITING), state = _l[0], setState = _l[1];
+    var _m = (0, react_1.useState)(null), correction = _m[0], setCorrection = _m[1];
+    var _o = (0, react_1.useState)(null), feedbackID = _o[0], setFeedbackID = _o[1];
     var startRecording = function () {
         if (stream.current == null) {
             return;
@@ -140,7 +140,7 @@ var SignRecognition = function (_a) {
                     : state == State.WAITING ?
                         (0, jsx_runtime_1.jsx)("button", __assign({ className: "mt-2 p-3 mx-auto bg-sign-speak-teal rounded-lg font-semibold text-white ".concat(containerClassName), onClick: startRecording }, { children: "Start Recording" }))
                         : state == State.CORRECTING ?
-                            (0, jsx_runtime_1.jsx)("input", { className: "mt-2 p-3 rounded-sm border-sign-speak-teal border", onSubmit: submitCorrection, onKeyUp: function (e) { return e.key == "Enter" ? submitCorrection() : null; }, onChange: function (e) { return setCorrection(e.target.value); }, defaultValue: interpretation !== null && interpretation !== void 0 ? interpretation : "" })
+                            (0, jsx_runtime_1.jsx)("input", { className: (0, tailwind_merge_1.twMerge)("mt-2 p-3 rounded-sm border-sign-speak-teal border ".concat(feedbackClassName)), onSubmit: submitCorrection, onKeyUp: function (e) { return e.key == "Enter" ? submitCorrection() : null; }, onChange: function (e) { return setCorrection(e.target.value); }, defaultValue: interpretation !== null && interpretation !== void 0 ? interpretation : "" })
                             :
                                 (0, jsx_runtime_1.jsxs)("div", __assign({ className: "flex flex-row justify-center" }, { children: [(0, jsx_runtime_1.jsx)("button", __assign({ onClick: function () { return submitGood(true); }, className: "mt-2 p-3 mx-2 bg-sign-speak-teal rounded-lg font-semibold text-white ".concat(containerClassName) }, { children: "Good" })), (0, jsx_runtime_1.jsx)("button", __assign({ onClick: function () { return submitGood(false); }, className: "mt-2 p-3 mx-2 bg-sign-speak-teal rounded-lg font-semibold text-white ".concat(containerClassName) }, { children: "Bad" })), (0, jsx_runtime_1.jsx)("button", __assign({ onClick: function () { return submitGood(null); }, className: "mt-2 p-3 mx-2 bg-sign-speak-teal rounded-lg font-semibold text-white ".concat(containerClassName) }, { children: "Skip" }))] }))] })));
 };
