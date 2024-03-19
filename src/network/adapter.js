@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.produceSpeech = exports.produceSign = exports.recognizeSpeech = exports.recognizeSign = void 0;
+exports.produceSpeech = exports.produceSign = exports.recognizeSpeech = exports.submitFeedback = exports.recognizeSign = void 0;
 var key_1 = require("./key");
 var API_ENDPOINT = "https://api.sign-speak.com";
 function recognizeSign(vidB64, model) {
@@ -53,12 +53,41 @@ function recognizeSign(vidB64, model) {
                     })];
                 case 1:
                     res = (_a.sent());
-                    return [2 /*return*/, res["prediction"][0]["prediction"]];
+                    return [2 /*return*/, [res["prediction"][0]["prediction"], res["feedback_id"]]];
             }
         });
     });
 }
 exports.recognizeSign = recognizeSign;
+function submitFeedback(feedbackId, good, correction) {
+    return __awaiter(this, void 0, void 0, function () {
+        var requestHeaders, options;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (good === null && correction === null) {
+                        return [2 /*return*/];
+                    }
+                    requestHeaders = new Headers();
+                    requestHeaders.set('Content-Type', 'application/json');
+                    requestHeaders.set('X-api-key', (0, key_1.getKey)());
+                    options = {
+                        method: 'POST',
+                        headers: requestHeaders,
+                        body: JSON.stringify({
+                            good: good,
+                            correction: correction
+                        }),
+                    };
+                    return [4 /*yield*/, fetch(API_ENDPOINT + "/feedback/" + feedbackId, options)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.submitFeedback = submitFeedback;
 function recognizeSpeech(audioB64, model) {
     if (model === void 0) { model = "LATEST"; }
     return __awaiter(this, void 0, void 0, function () {
@@ -73,7 +102,7 @@ function recognizeSpeech(audioB64, model) {
                     })];
                 case 1:
                     res = (_a.sent());
-                    return [2 /*return*/, res["prediction"][0]["prediction"]];
+                    return [2 /*return*/, res];
             }
         });
     });

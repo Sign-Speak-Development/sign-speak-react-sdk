@@ -15,7 +15,8 @@ const meta = {
     cameraClassName: {control: 'text'},
     gotResult: { action: 'processed' },
     interpretationClassName: {control: 'text'},
-    modelName: {control: 'text'}
+    modelName: {control: 'text'},
+    includeFeedback: {control: 'boolean'}
   },
   
 } satisfies Meta<typeof SignRecognition>;

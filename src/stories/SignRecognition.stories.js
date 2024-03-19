@@ -15,7 +15,8 @@ var meta = {
         cameraClassName: { control: 'text' },
         gotResult: { action: 'processed' },
         interpretationClassName: { control: 'text' },
-        modelName: { control: 'text' }
+        modelName: { control: 'text' },
+        includeFeedback: { control: 'boolean' }
     },
 };
 exports.default = meta;
