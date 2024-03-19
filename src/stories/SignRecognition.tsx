@@ -3,7 +3,6 @@ import { recognizeSign, submitFeedback } from '../network/adapter';
 import ClipLoader from "react-spinners/ClipLoader";
 import { setKey } from '../network/key';
 import { twMerge } from 'tailwind-merge'
-import { SpeechProduction } from './SpeechProduction';
 
 export interface SignRecognitionProps {
   modelName?: string
@@ -134,7 +133,6 @@ export const SignRecognition = ({
   }, []);
   return (
     <div className={twMerge(`flex flex-col ${containerClassName}`)}>
-      {interpretation ? <SpeechProduction text={interpretation} /> : null}
       <video
         autoPlay
         playsInline
