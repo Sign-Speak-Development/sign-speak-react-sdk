@@ -1,0 +1,18 @@
+# Exclude source files
+src/
+*.ts
+*.tsx
+
+# Exclude build-related and config files
+tsconfig.json
+tailwind.config.js
+
+# Exclude unnecessary artifacts
+node_modules/
+package-lock.json
+.git/
+.gitignore
+.npmignore
+
+# Exclude styles (if not needed in npm package)
+index.css
