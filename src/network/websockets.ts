@@ -54,6 +54,11 @@ export class SignSpeakWebSocket {
             });
 
             this.socket!.addEventListener("message", (event) => this.handleMessage(event));
+
+            this.socket!.addEventListener("close", (event) => {
+                this.socket = null;
+                this.isConnected = false;
+            })
         });
     }
 
@@ -144,19 +149,32 @@ export class SignSpeakWebSocket {
      * Stops the streaming process and sends a termination signal.
      * @param closeSocket If true, the WebSocket connection will close.
      */
-    stopStreaming(closeSocket: boolean = true): void {
+    async stopStreaming(closeSocket: boolean = true): Promise<void> {
         if (this.mediaRecorder) {
+            // We need to wait for the final mediarecorder packet before sending the close signal.
+            // If we do not, the final slice_length will be cut off.
+            this.mediaRecorder.ondataavailable = null;
+            const finalDataPromise = new Promise<void>((resolve, reject) => {
+                this.mediaRecorder!.addEventListener("dataavailable", (e: BlobEvent) => {
+                    const blob = new Blob([e.data], { type: "video/mp4" });
+                    const reader = new FileReader();
+                    reader.readAsArrayBuffer(blob);
+                    reader.onloadend = () => {
+                        if (reader.result && this.socket) {
+                            this.socket.send(reader.result as ArrayBuffer);
+                        }
+                        resolve();
+                    };
+                    reader.onerror = reject;
+                }, { once: true });
+            });
             this.mediaRecorder.stop();
-        } else {
-            console.warn("No active media recording to stop.");
+            await finalDataPromise;
         }
-        this.stream?.getTracks().forEach((track) => track.stop());
 
+        // Send the termination signal.
         if (this.socket) {
             this.socket.send(closeSocket ? "DONE" : "NEXT");
-            if (closeSocket) {
-                this.disconnect();
-            }
         }
     }
 
@@ -170,12 +188,4 @@ export class SignSpeakWebSocket {
             this.isConnected = false;
         }
     }
-}
-
-/**
- * Utility function to delay execution.
- * @param ms Milliseconds to delay.
- */
-function delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
 }
