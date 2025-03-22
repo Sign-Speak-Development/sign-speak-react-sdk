@@ -61,7 +61,7 @@ export async function recognizeSpeech(
     payload: audioB64,
     single_recognition_mode: true,
     request_class: "BLOCKING",
-    model: options?.model ?? "SLR.2.sm",
+    model: options?.model ?? "LATEST",
     language: options?.language ?? "en",
     ...options,
   };
