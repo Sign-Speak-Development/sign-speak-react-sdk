@@ -39,7 +39,7 @@ export async function recognizeSign(
     payload: vidB64,
     single_recognition_mode: true,
     request_class: "BLOCKING",
-    model: options?.model ?? "LATEST",
+    model: options?.model ?? "SLR.2.sm",
     ...options,
   };
 

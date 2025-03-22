@@ -219,7 +219,7 @@ import { getKey } from 'sign-speak-sdk/network/key';
 const videoBase64 = '...'; // Your base64-encoded video
 const result = await recognizeSign(videoBase64, {
   request_class: 'BLOCKING',
-  model: 'MAIN',
+  model: 'SLR.2.sm',
   hint: 'Name is Nikolas.',
   single_recognition_mode: true,
   apiKey: getKey()
